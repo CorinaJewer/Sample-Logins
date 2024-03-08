@@ -13,10 +13,15 @@ app.get('/', (req, res) => {
     res.render('index.ejs', { name: 'Corina'});
   });
 
-  app.use((req, res) => {
-    res.status(404).render('404');
-  });
-  
-  app.listen(PORT, () => {
-    console.log(`Simple app running on port ${PORT}.`)
-  });
+// anything beginning with "/api" will go into this
+const apiRouter = require('./routes/api')
+app.use('/api', apiRouter);
+
+
+app.use((req, res) => {
+  res.status(404).render('404');
+});
+
+app.listen(PORT, () => {
+  console.log(`Simple app running on port ${PORT}.`)
+});
