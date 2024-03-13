@@ -1,11 +1,14 @@
 var router = require('express').Router();
-const loginsDal = require('../../services/pg.logins.dal')
+//const loginsDal = require('../../services/pg.logins.dal')
+const loginsDal = require('../../services/m.logins.dal')
 
 // api/logins
 router.get('/', async (req, res) => {
     if(DEBUG) console.log('ROUTE: /api/logins/ GET ' + req.url);
+   
     try {
         let theLogins = await loginsDal.getLogins(); 
+        if(DEBUG) console.table(theLogins);  //Table Display
         res.json(theLogins);
     } catch {
         // log this error to an error log file.
