@@ -1,10 +1,10 @@
-const dal = require("./auth_db");  // Database Connection
+const dal = require("./pg.auth_db");  // Database Connection
 
 //get all logins.
 var getLogins = function() {
   if(DEBUG) console.log("pg.logins.dal.getLogins()");
   return new Promise(function(resolve, reject) {
-    const sql = `SELECT id, username, password FROM public."Logins" \
+    const sql = `SELECT id AS _id, username, password FROM public."Logins" \
         ORDER BY id DESC LIMIT 7;`
     dal.query(sql, [], (err, result) => {
       if (err) {
@@ -21,7 +21,7 @@ var getLogins = function() {
 var getLoginByLoginId = function(id) {
   if(DEBUG) console.log("logins.pg.dal.getLoginByLoginId()");
   return new Promise(function(resolve, reject) {
-    const sql = `SELECT id, username, password FROM public."Logins" WHERE id = $1`;
+    const sql = `SELECT id AS _id, username, password FROM public."Logins" WHERE id = $1`;
     dal.query(sql, [id], (err, result) => {
       if (err) {
         // logging should go here
@@ -53,7 +53,7 @@ var addLogin = function(username, password) {
 var patchLogin = function(id, username, password) {
   if(DEBUG) console.log("logins.pg.dal.patchLogin()");
   return new Promise(function(resolve, reject) {
-    const sql = `UPDATE public."Logins" SET username=$2, password=$3 WHERE id=$1;`;
+    const sql = `UPDATE public."Logins" SET username=$2, password=$3 WHERE id = $1;`;
     dal.query(sql, [id, username, password], (err, result) => {
       if (err) {
           reject(err);
