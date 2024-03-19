@@ -67,10 +67,25 @@ async function patchLogin(id, username, password, email) {
   }
 };
 
+async function deleteLogin(id) {
+  if(DEBUG) console.log("logins.mongo.dal.deleteLogin()");
+  try {
+    await dal.connect();
+    const result = await dal.db("Auth").collection("logins").deleteOne({ _id: new ObjectId(id) });
+    return result;
+  } catch(error) {
+    console.log(error);
+    throw error;
+  } finally {
+    dal.close();
+  }
+};
+
 
 module.exports = {
     getLogins,
     getLoginByLoginId,
     addLogin,
-    patchLogin
+    patchLogin,
+    deleteLogin
 }
