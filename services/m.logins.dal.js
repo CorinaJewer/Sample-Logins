@@ -32,8 +32,26 @@ async function getLoginByLoginId(id) {
   }
 };
 
+async function addLogin(username, password, email, uuid) {
+  if(DEBUG) console.log("logins.mongo.dal.addLogin()");
+  let newLogin = JSON.parse(`{ "username": "${username}", "password": "${password}" \
+  , "email": "${email}", "uuid": "${uuid}" }`);
+  if(DEBUG) console.log(newLogin);
+  try {
+    await dal.connect();
+    const result = await dal.db("Auth").collection("logins").insertOne(newLogin);
+    return result.insertedId;
+  } catch(error) {
+    console.log(error);
+    throw error;
+  } finally {
+    dal.close();
+  }
+};
+
 
 module.exports = {
     getLogins,
-    getLoginByLoginId
+    getLoginByLoginId,
+    addLogin
 }

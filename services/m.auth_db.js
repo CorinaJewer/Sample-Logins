@@ -8,4 +8,6 @@ const uri = "mongodb://localhost:27017/";
 const pool = new MongoClient(uri);
 // const pool = new MongoClient(atlas);
 
+if (DEBUG) console.log("Connected to MongoDB")
+
 module.exports = pool;
