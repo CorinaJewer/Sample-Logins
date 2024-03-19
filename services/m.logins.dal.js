@@ -49,9 +49,28 @@ async function addLogin(username, password, email, uuid) {
   }
 };
 
+async function patchLogin(id, username, password, email) {
+  if(DEBUG) console.log("logins.mongo.dal.patchLogin()");
+  try {
+    await dal.connect();
+    const result = await dal.db("Auth").collection("logins")
+      .updateOne({_id: new ObjectId(id)},
+        {$set: {username: username, password: password, email: email}},
+        {upsert: true, returnDocument: 'after'}
+        );
+    return result;
+  } catch(error) {
+    console.log(error);
+    throw error;
+  } finally {
+    dal.close();
+  }
+};
+
 
 module.exports = {
     getLogins,
     getLoginByLoginId,
-    addLogin
+    addLogin,
+    patchLogin
 }
