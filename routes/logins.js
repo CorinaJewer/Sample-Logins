@@ -1,8 +1,10 @@
 const express = require('express');
 const uuid = require ('uuid');
 const router = express.Router();
-//const loginsDal = require('../services/pg.logins.dal')
-const loginsDal = require('../services/m.logins.dal')
+const bcrypt = require('bcrypt');
+
+const loginsDal = require('../services/pg.logins.dal')
+//const loginsDal = require('../services/m.logins.dal')
 
 router.get('/', async (req, res) => {
   // const theLogins = [
@@ -48,7 +50,10 @@ router.get('/:id/delete', async (req, res) => {
 router.post('/', async (req, res) => {
   if(DEBUG) console.log("logins.POST");
   try {
-      await loginsDal.addLogin(req.body.username, req.body.password, req.body.email, uuid.v4());
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    if(DEBUG) console.log ('hashedPassword: ' + hashedPassword);
+      let result = await loginsDal.addLogin(req.body.username, hashedPassword, req.body.email, uuid.v4());
+      if(DEBUG) console.log('result ' + result);
       res.redirect('/logins/');
   } catch (err){
  //     if(DEBUG) console.log(err);
